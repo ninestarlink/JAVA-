@@ -70,6 +70,7 @@ public class FriendChat1 extends JFrame implements ActionListener{//只允许单继承
 			ObjectOutputStream oos;
 			try {
 				Socket s=(Socket)ClientConnetion.hmSocket.get(sender);
+				System.out.println("ddddddd"+s);
 				oos=new ObjectOutputStream(s.getOutputStream());//拿不到非静态Socket对象
 				oos.writeObject(mess);
 				

@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.HashMap;
 
 import com.yychat.model.Message;
+import com.yychat.model.MessageType;
 import com.yychat.model.User;
 
 public class ClientConnetion {
@@ -22,6 +23,27 @@ public class ClientConnetion {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean registerUserIntoDB(User user){
+		boolean registerSuccess=false;
+		ObjectOutputStream oos;
+		Message mess=null;
+		try {
+			//把字节输出流对象 包装成 对象输出流对象
+			oos=new ObjectOutputStream(s.getOutputStream());
+			oos.writeObject(user);			
+			
+			ObjectInputStream ois=new ObjectInputStream(s.getInputStream());
+			mess=(Message)ois.readObject();//接收
+			if(mess.getMessageType().equals(MessageType.message_RegisterSuccess)) {
+				registerSuccess=true;
+				s.close();//关闭客户端的s
+			}
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return registerSuccess;
 	}
 	
 	public Message loginValidate(User user){

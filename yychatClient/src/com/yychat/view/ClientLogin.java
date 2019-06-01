@@ -62,6 +62,7 @@ public class ClientLogin extends JFrame implements ActionListener{//类名：Client
 		jb1=new JButton(new ImageIcon("images/denglu.gif"));
 		jb1.addActionListener(this);//2、添加监听器
 		jb2=new JButton(new ImageIcon("images/zhuce.gif"));
+		jb2.addActionListener(this);
 		jb3=new JButton(new ImageIcon("images/quxiao.gif"));
 		jp1=new JPanel();
 		jp1.add(jb1);jp1.add(jb2);jp1.add(jb3);
@@ -80,12 +81,28 @@ public class ClientLogin extends JFrame implements ActionListener{//类名：Client
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {//3、添加事件处理代码
+		if(arg0.getSource()==jb2) {
+			String userName=jtf1.getText();
+			String passWord=new String(jpf1.getPassword());
+			User user=new User();
+			user.setUserName(userName);
+			user.setPassWord(passWord);
+			user.setUserMessageType("USER_REGISTER");
+			
+			boolean registerSuccess=new ClientConnetion().registerUserIntoDB(user);
+			if(registerSuccess) {
+				JOptionPane.showMessageDialog(this, "注册成功");
+		}else {
+			JOptionPane.showMessageDialog(this, "用户名已存在，注册失败");
+		}
+	}
 		if(arg0.getSource()==jb1) {
 			String userName=jtf1.getText();
 			String passWord=new String(jpf1.getPassword());
 			User user=new User();
 			user.setUserName(userName);
-			user.setPassWord(passWord);			
+			user.setPassWord(passWord);	
+			user.setUserMessageType("USER_LOGIN");
 			//密码验证，密码是123456验证成功，否则验证失败
 			Message mess=new ClientConnetion().loginValidate(user);
 			if(mess.getMessageType().equals(Message.message_LoginSuccess)){
@@ -108,9 +125,6 @@ public class ClientLogin extends JFrame implements ActionListener{//类名：Client
 				} catch (IOException e ){
 					e.printStackTrace();
 				}
-				
-				
-				
 				
 				this.dispose();
 			}else{
